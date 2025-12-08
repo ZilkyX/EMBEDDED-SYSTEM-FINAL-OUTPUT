@@ -27,11 +27,6 @@ export default async function AppSidebar() {
         <NavMain
           items={[
             { title: "Dashboard", url: "/dashboard", iconName: "Dashboard" },
-            {
-              title: "Real-time Monitoring",
-              url: "/monitoring",
-              iconName: "Real-time Monitoring",
-            },
             { title: "Sensor Logs", url: "/logs", iconName: "Sensor Logs" },
             { title: "Maintenance", url: "/settings", iconName: "Maintenance" },
           ]}

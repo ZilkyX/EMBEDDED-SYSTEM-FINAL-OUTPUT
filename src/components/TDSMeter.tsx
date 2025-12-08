@@ -1,18 +1,22 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Droplet } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSensorData } from "@/hooks/useSensorData";
 
-export default function TDSHorizontalMeter({
-  value = 1900,
-  min = 0,
-  max = 2000,
-}: {
-  value?: number;
+interface TDSHorizontalMeterProps {
   min?: number;
   max?: number;
-}) {
+}
+
+export default function TDSHorizontalMeter({
+  min = 0,
+  max = 2000,
+}: TDSHorizontalMeterProps) {
+  const { data, espOnline } = useSensorData();
+  const value = espOnline ? data?.tds ?? 0 : 0;
   const clampedValue = Math.min(max, Math.max(min, value));
   const percentage = ((clampedValue - min) / (max - min)) * 100;
 
@@ -22,28 +26,45 @@ export default function TDSHorizontalMeter({
   );
 
   return (
-    <Card className="bg-muted/40 border-none shadow-xl rounded-2xl p-6 flex flex-col items-center hover:shadow-2xl transition-shadow duration-300">
-      <CardHeader className="text-center p-0 mb-4">
-        <CardTitle className="text-lg font-semibold flex items-center justify-center gap-2">
-          <Droplet className="w-5 h-5 text-blue-400" />
-          TDS Level
-        </CardTitle>
+    <Card className="bg-muted/40 rounded-2xl shadow hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center">
+      <CardHeader className="flex flex-col items-center gap-2 p-0 mb-4">
+        <div className="flex items-center gap-2">
+          <Droplet
+            className={`w-5 h-5 ${
+              espOnline ? "text-blue-500" : "text-red-600"
+            }`}
+          />
+          <CardTitle className="text-lg font-semibold">TDS Level</CardTitle>
+        </div>
+        <Badge
+          variant={espOnline ? "default" : "destructive"}
+          className={` ${espOnline ? "hidden" : ""}`}
+        >
+          {espOnline ? "" : "ESP-01 Disconnected"}
+        </Badge>
       </CardHeader>
 
-      <CardContent className="flex flex-col items-center w-full">
-        <div className="text-3xl font-bold mb-4">{value} ppm</div>
+      <CardContent className="flex flex-col items-center w-full gap-4">
+        <div
+          className={`text-3xl font-bold ${
+            espOnline ? "text-foreground" : "text-red-600"
+          }`}
+        >
+          {value} ppm
+        </div>
 
-        <div className="relative w-full h-8 rounded-full overflow-hidden bg-gray-200 shadow-inner">
+        <div className="relative w-full h-4 rounded-full bg-muted overflow-hidden">
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(to right, #10b981 0%, #facc15 25%, #f97316 50%, #ef4444 75%, #ef4444 100%)",
+              background: espOnline
+                ? "linear-gradient(to right, #10b981 0%, #facc15 25%, #f97316 50%, #ef4444 75%, #ef4444 100%)"
+                : "linear-gradient(to right, #fca5a5 0%, #f87171 50%, #ef4444 100%)",
             }}
           />
 
           <motion.div
-            className="absolute top-0 h-8 flex items-center justify-center"
+            className="absolute top-0 h-4 flex items-center justify-center"
             style={{
               left: `calc(${percentage}% )`,
               transform: "translateX(-50%)",
@@ -53,23 +74,31 @@ export default function TDSHorizontalMeter({
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <svg width="16" height="16" viewBox="0 0 16 16">
-              <polygon points="8,0 4,8 12,8" fill="#111" />
+              <polygon
+                points="8,0 4,8 12,8"
+                fill={espOnline ? "#111" : "#b91c1c"}
+              />
             </svg>
           </motion.div>
         </div>
 
-        <div className="relative w-full mt-2 h-4">
+        <div className="relative w-full h-6">
           {ticks.map((tick) => {
             const tickPercentage = ((tick - min) / (max - min)) * 100;
             return (
               <div
                 key={tick}
-                className="absolute top-0 w-0.5 h-3 rounded bg-primary"
+                className={`absolute top-0 w-px h-3 ${
+                  espOnline ? "bg-primary" : "bg-red-600"
+                }`}
                 style={{ left: `calc(${tickPercentage}% - 1px)` }}
               >
                 <span
-                  className="absolute top-3 -translate-x-1/2 text-xs font-medium text-primary"
-                  style={{ left: "50%" }}
+                  className="absolute top-3 -translate-x-1/2 text-xs font-medium"
+                  style={{
+                    left: "50%",
+                    color: espOnline ? undefined : "#b91c1c",
+                  }}
                 >
                   {tick}
                 </span>

@@ -3,29 +3,36 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Beaker } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSensorData } from "@/hooks/useSensorData";
+import { Badge } from "./ui/badge";
 
 export default function PHHorizontalMeter({
-  value = 6.7,
   min = 0,
   max = 14,
 }: {
-  value?: number;
   min?: number;
   max?: number;
 }) {
+  const { data, espOnline } = useSensorData();
+  const value = espOnline ? data?.ph ?? 0 : 0; // show 0 if disconnected
   const percentage = ((value - min) / (max - min)) * 100;
 
   return (
-    <Card className="bg-muted/40 border-none shadow-xl rounded-2xl p-6 flex flex-col items-center hover:shadow-2xl transition-shadow duration-300">
+    <Card className="bg-muted/40 shadow-xl rounded-2xl p-6 flex flex-col items-center hover:shadow-2xl transition-shadow duration-300">
       <CardHeader className="text-center p-0 mb-4">
         <CardTitle className="text-lg font-semibold flex items-center justify-center gap-2">
-          <Beaker className="w-5 h-5 text-blue-500" />
+          <Beaker
+            className={`w-5 h-5 ${
+              espOnline ? "text-blue-500" : "text-red-600"
+            }`}
+          />
           pH Level
         </CardTitle>
+        {!espOnline && <Badge variant="destructive">ESP-01 Disconnected</Badge>}
       </CardHeader>
 
       <CardContent className="flex flex-col items-center w-full">
-        <div className="text-3xl font-bold mb-4">{value.toFixed(1)}</div>
+        <div className="text-3xl font-bold mb-4">{value}</div>
 
         <div className="relative w-full h-8 rounded-full overflow-hidden bg-gray-200 shadow-inner">
           {/* Gradient bar */}
