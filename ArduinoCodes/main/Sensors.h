@@ -13,7 +13,6 @@ class Sensors {
     byte _phPin;
     byte _waterLevelPin;   
 
-
     // Temperature sensor lib
     OneWire* _oneWire;
     DallasTemperature* _temperatureSensor;

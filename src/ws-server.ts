@@ -57,6 +57,12 @@ wss.on("connection", (ws) => {
       return;
     }
 
+    if (msg.type === "pims") {
+      console.log("Maintenance Pins:", msg.data);
+      broadcastToDashboards({ type: "pims", data: msg.data });
+      return;
+    }
+
     if (msg.type === "cmd") {
       lastCommand = msg.command;
       console.log("Dashboard Command:", lastCommand);
@@ -64,6 +70,12 @@ wss.on("connection", (ws) => {
       if (espClient && espClient.readyState === 1) {
         espClient.send(JSON.stringify({ type: "cmd", command: lastCommand }));
       }
+
+      broadcastToDashboards({
+        type: "status",
+        espOnline: espClient !== null,
+        mode: lastCommand,
+      });
       return;
     }
   });

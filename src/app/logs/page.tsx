@@ -37,284 +37,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ----------------------
-// Dummy Sensor Logs
+// Types
 // ----------------------
-const sensorLogs = [
-  {
-    id: 1,
-    timestamp: "2025-12-02 08:00",
-    temperature: 27.4,
-    ph: 7.12,
-    tds: 320,
-  },
-  {
-    id: 2,
-    timestamp: "2025-12-02 08:10",
-    temperature: 27.6,
-    ph: 7.1,
-    tds: 322,
-  },
-  {
-    id: 3,
-    timestamp: "2025-12-02 08:20",
-    temperature: 27.5,
-    ph: 7.15,
-    tds: 319,
-  },
-  {
-    id: 4,
-    timestamp: "2025-12-02 08:30",
-    temperature: 27.7,
-    ph: 7.18,
-    tds: 325,
-  },
-  {
-    id: 5,
-    timestamp: "2025-12-02 08:40",
-    temperature: 27.9,
-    ph: 7.11,
-    tds: 318,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-  {
-    id: 6,
-    timestamp: "2025-12-02 08:50",
-    temperature: 28.0,
-    ph: 7.19,
-    tds: 330,
-  },
-];
+export type SensorReading = {
+  id: string;
+  timestamp: string;
+  temperature: number;
+  ph: number;
+  tds: number;
+  status: string;
+};
 
 // ----------------------
 // Columns
 // ----------------------
-const columns: ColumnDef<(typeof sensorLogs)[number]>[] = [
+const columns: ColumnDef<SensorReading>[] = [
   { accessorKey: "id", header: "ID" },
   { accessorKey: "timestamp", header: "Timestamp" },
   {
@@ -328,10 +68,64 @@ const columns: ColumnDef<(typeof sensorLogs)[number]>[] = [
     cell: ({ row }) => row.original.ph.toFixed(2),
   },
   { accessorKey: "tds", header: "TDS (ppm)" },
+
+  // ✅ STATUS COLUMN (COLORED)
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      const statusColors = {
+        Excellent: "text-green-600",
+        Good: "text-blue-600",
+        Fair: "text-yellow-600",
+        Warning: "text-orange-600",
+        Poor: "text-red-600",
+      };
+
+      const color = statusColors[status] || "text-gray-600";
+
+      return <span className={`${color} font-semibold`}>{status}</span>;
+    },
+  },
 ];
 
 export default function SensorLogsPage() {
+  const [sensorLogs, setSensorLogs] = useState<SensorReading[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
+
+  // ----------------------
+  // Fetch live readings
+  // ----------------------
+  useEffect(() => {
+    async function fetchReadings() {
+      try {
+        const res = await fetch("/api/readings");
+        const data = await res.json();
+
+        if (data.success) {
+          setSensorLogs(
+            data.data.map((r: any, index: number) => ({
+              id: r._id || index.toString(),
+              timestamp: new Date(r.createdAt).toLocaleString(),
+              temperature: r.temperature,
+              ph: r.ph,
+              tds: r.tds,
+              status: r.status, // ✅ include status
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("Failed to fetch readings:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchReadings();
+  }, []);
 
   const table = useReactTable({
     data: sensorLogs,
@@ -339,9 +133,7 @@ export default function SensorLogsPage() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: {
-      globalFilter: filter,
-    },
+    state: { globalFilter: filter },
     onGlobalFilterChange: setFilter,
   });
 
@@ -367,8 +159,9 @@ export default function SensorLogsPage() {
       columns.map((col) => {
         if ("accessorKey" in col && col.accessorKey) {
           const key = col.accessorKey as keyof typeof row;
-          const value = row[key];
-          return value !== undefined && value !== null ? String(value) : "";
+          return row[key] !== null && row[key] !== undefined
+            ? String(row[key])
+            : "";
         }
         return "";
       })
@@ -378,13 +171,20 @@ export default function SensorLogsPage() {
     doc.save("sensor_logs.pdf");
   };
 
+  if (loading) return <p>Loading sensor data...</p>;
+
   return (
     <div className="p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold">Sensor Logs</h1>
+        </div>
+      </div>
       <Card className="@container/card mt-5 shadow-lg">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
             <CardTitle>Sensor Readings</CardTitle>
-            <CardDescription>Readings updated every 10 minutes</CardDescription>
+            <CardDescription>Latest readings from the sensor</CardDescription>
           </div>
 
           <div className="flex gap-2 flex-wrap">

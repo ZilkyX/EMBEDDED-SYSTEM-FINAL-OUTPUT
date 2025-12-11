@@ -27,13 +27,19 @@ const sampleRecommendations: Recommendation[] = [
     id: 2,
     type: "Maintenance",
     dueDate: "2025-12-10",
-    message: "Check wiring and calibration.",
+    message: "Check pins of the arduino.",
   },
   {
     id: 3,
     type: "WaterChange",
     dueDate: "2025-12-06",
     message: "Change 20% of the water to keep the tank healthy.",
+  },
+  {
+    id: 4,
+    type: "Maintenance",
+    dueDate: "2025-12-12",
+    message: "Clean water pump filter to improve circulation.",
   },
 ];
 
@@ -157,7 +163,7 @@ export default function RecommendationsCard() {
 
                 {rec.type === "WaterChange" && (
                   <span className="mt-1 text-xs font-medium" style={{ color }}>
-                    Water Status: {waterStatus}
+                    Water Level : {data?.waterPercent}%
                   </span>
                 )}
               </div>

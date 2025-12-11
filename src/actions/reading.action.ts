@@ -39,3 +39,25 @@ export async function saveReading({
     };
   }
 }
+
+export async function getAllReadings() {
+  try {
+    await dbConnect();
+
+    // Fetch all readings, sorted by creation date descending
+    const readings = await Reading.find({}).sort({ createdAt: -1 });
+
+    return {
+      success: true,
+      data: readings,
+      message: "All readings fetched successfully",
+    };
+  } catch (err: any) {
+    console.error("Error fetching readings:", err);
+    return {
+      success: false,
+      message: "Error fetching readings",
+      error: err.message,
+    };
+  }
+}

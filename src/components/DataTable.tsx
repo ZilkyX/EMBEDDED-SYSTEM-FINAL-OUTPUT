@@ -20,14 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import {
   Card,
   CardHeader,
@@ -45,22 +38,6 @@ export type SensorReading = {
   ph: number;
   tds: number;
 };
-
-// ----------------------
-// Dummy Data (10-min intervals)
-// ----------------------
-const sensorData: SensorReading[] = [
-  { timestamp: "2025-12-02 08:00", temperature: 27.4, ph: 7.12, tds: 320 },
-  { timestamp: "2025-12-02 08:10", temperature: 27.6, ph: 7.1, tds: 322 },
-  { timestamp: "2025-12-02 08:20", temperature: 27.5, ph: 7.15, tds: 319 },
-  { timestamp: "2025-12-02 08:30", temperature: 27.7, ph: 7.18, tds: 325 },
-  { timestamp: "2025-12-02 08:40", temperature: 27.9, ph: 7.11, tds: 318 },
-  { timestamp: "2025-12-02 08:50", temperature: 28.0, ph: 7.19, tds: 330 },
-  { timestamp: "2025-12-02 09:00", temperature: 28.1, ph: 7.22, tds: 335 },
-  { timestamp: "2025-12-02 09:10", temperature: 28.3, ph: 7.2, tds: 340 },
-  { timestamp: "2025-12-02 09:20", temperature: 28.2, ph: 7.25, tds: 338 },
-  { timestamp: "2025-12-02 09:30", temperature: 28.4, ph: 7.23, tds: 342 },
-];
 
 // ----------------------
 // Columns
@@ -112,7 +89,7 @@ export function SensorDataTable({
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <CardTitle>Sensor Readings</CardTitle>
-          <CardDescription>Readings updated every 10 minutes</CardDescription>
+          <CardDescription>Latest readings from the sensor</CardDescription>
         </div>
 
         <div className="flex gap-2">
@@ -157,6 +134,7 @@ export function SensorDataTable({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table
               .getRowModel()
@@ -203,6 +181,41 @@ export function SensorDataTable({
   );
 }
 
+// ----------------------
+// Page Component with Live Fetch
+// ----------------------
 export default function SensorReadingsPage() {
+  const [sensorData, setSensorData] = React.useState<SensorReading[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  // Fetch readings on mount
+  React.useEffect(() => {
+    async function fetchReadings() {
+      try {
+        const res = await fetch("/api/readings");
+        const data = await res.json();
+
+        if (data.success) {
+          setSensorData(
+            data.data.map((r: any) => ({
+              timestamp: new Date(r.createdAt).toLocaleString(),
+              temperature: r.temperature,
+              ph: r.ph,
+              tds: r.tds,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("Failed to fetch readings:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchReadings();
+  }, []);
+
+  if (loading) return <p>Loading sensor data...</p>;
+
   return <SensorDataTable columns={sensorColumns} data={sensorData} />;
 }
